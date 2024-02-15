@@ -2,23 +2,20 @@ const mongoose = require('mongoose')
 
 const exerciseSchema = new mongoose.Schema(
 	{
-    owner: {
+        owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', 
         required: true,
+        }, 
+        name: {
+			type: String,
+			required: true,
+		},
+        description: { 
+            type: String, 
+            required: true 
         },
-    description: { 
-		type: String, 
-		required: true 
-	},
-    duration: {
-		 type: Number, 
-		 required: true 
-		},
-    date: {
-		 type: Date,
-		  required: true 
-		},
+
 	},
 	{
 		timestamps: true,

@@ -5,12 +5,14 @@ const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
 const requireOwnership = customErrors.requireOwnership
 const removeBlanks = require('../../lib/remove_blank_fields')
+const exercise = require('../models/exercise')
 const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 // INDEX
 // GET /exercises
-router.get('/exercises', requireToken, (req, res, next) => {
+// router.get('/exercises', requireToken, (req, res, next) => {
+router.get('/exercises', (req, res, next) => {
 	Exercise.find()
 		.then((exercises) => {
 			// `exercises will be an array of Mongoose documents
@@ -26,7 +28,8 @@ router.get('/exercises', requireToken, (req, res, next) => {
 
 // SHOW
 // GET /exercises/5a7db6c74d55bc51bdf39793
-router.get('/exercises/:id', requireToken, (req, res, next) => {
+// router.get('/exercises/:id', requireToken, (req, res, next) => {
+router.get('/exercises/:id', (req, res, next) => {
 	// req.params.id will be set based on the `:id` in the route
 	Exercise.findById(req.params.id)
 		.then(handle404)
@@ -39,22 +42,25 @@ router.get('/exercises/:id', requireToken, (req, res, next) => {
 // CREATE
 // POST /exercises
 router.post('/exercises', requireToken, (req, res, next) => {
-	// set owner of new exercise to be current user
-	req.body.exercise.owner = req.user.id
+    // set owner of new exercises to be current user
+    req.body.exercise.owner = req.user.id
 
-	Exercise.create(req.body.exercise)
-		// respond to succesful `create` with status 201 and JSON of new "exercise"
-		.then((exercise) => {
-			res.status(201).json({ exercise: exercise.toObject() })
-		})
-		.catch(next)
+    Exercise.create(req.body.exercise)
+        // respond to succesful `create` with status 201 and JSON of new "exercise"
+        .then((exercise) => {
+            res.status(201).json({ exercise: exercise.toObject() })
+        })
+        // if an error occurs, pass it off to our error handler
+        // the error handler needs the error message and the `res` object so that it
+        // can send an error message back to the client
+        .catch(next)
 })
+
+
 
 // UPDATE
 // PATCH /exercises/5a7db6c74d55bc51bdf39793
 router.patch('/exercises/:id', requireToken, removeBlanks, (req, res, next) => {
-	// if the client attempts to change the `owner` property by including a new
-	// owner, prevent that by deleting that key/value pair
 	delete req.body.exercise.owner
 
 	Exercise.findById(req.params.id)

@@ -4,13 +4,13 @@ const db = require('../../config/db')
 
 const startExercises = [
     {
-        username: 'user1',
+        name: 'Josh',
         description: 'Jogging',
         duration: 30,
         date: new Date(),
       },
       {
-        username: 'user2',
+        name: 'Timm',
         description: 'Weightlifting',
         duration: 45,
         date: new Date(),

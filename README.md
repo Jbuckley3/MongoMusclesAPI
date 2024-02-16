@@ -1,6 +1,22 @@
 # MongoMuscles API 
 
-#### Backend server for the pets app, with auth and mongoose relationships etc.
+#### Backend server for the MongoMuscles app, with auth and mongoose relationships etc.
+
+
+It will be utilized by the **MongoMusclesb** client application: https://main--mongomuscles.netlify.app/
+
+## Getting Started
+
+Deployed API URL: https://mongomusclesapi.fly.dev/
+
+## ERD
+
+![ERD](public/ERD.png)
+
+## ICEBOX ERD
+
+![Iecbox ERD](public/iceboxERD.png)
+
 
 ## Entities 
 
@@ -30,14 +46,6 @@ Exercise is comprised of the following:
         type: String, 
         required: true 
         },
-    duration: {
-         type: Number, 
-         required: true 
-         },
-    date: { 
-        type: Date, 
-        required: true 
-        },
 
 ```
 
@@ -65,3 +73,4 @@ Exercise is comprised of the following:
 | POST   | `/exercises`             | `exercises#create`    |
 | POST  | `/exercises` | `exercises#update`  |
 | DELETE | `/exercises/:id`         | `exercises#delete`   |
+

@@ -12,32 +12,52 @@ const router = express.Router()
 // INDEX
 // GET /exercises
 // router.get('/exercises', requireToken, (req, res, next) => {
-router.get('/exercises', (req, res, next) => {
-	Exercise.find()
+    router.get('/exercises', (req, res, next) => {
+        Exercise.find()
+            .populate('owner')
+            .then((exercises) => {
+
+                return exercises.map((exercise) => exercise.toObject())
+            })
+            // respond with status 200 and JSON of the pets
+            .then((exercises) => res.status(200).json({ exercises: exercises }))
+            // if an error occurs, pass it to the handler
+            .catch(next)
+    })
+    
+// show route for only the logged in user's exercises
+// GET /pets/mine
+// requireToken gives us access to req.user.id
+router.get('/exercises/mine', requireToken, (req, res, next) => {
+	Exercise.find({ owner: req.user.id })
 		.then((exercises) => {
-			// `exercises will be an array of Mongoose documents
+			// `exercises` will be an array of Mongoose documents
 			// we want to convert each one to a POJO, so we use `.map` to
 			// apply `.toObject` to each one
-			return exercises.map((exercise) => exercise.toObject())
+			return exercises.map((pet) => exercise.toObject())
 		})
-		// respond with status 200 and JSON of the exercises
+		// respond with status 200 and JSON of the pets
 		.then((exercises) => res.status(200).json({ exercises: exercises }))
 		// if an error occurs, pass it to the handler
 		.catch(next)
 })
 
+
+
 // SHOW
 // GET /exercises/5a7db6c74d55bc51bdf39793
 // router.get('/exercises/:id', requireToken, (req, res, next) => {
 router.get('/exercises/:id', (req, res, next) => {
-	// req.params.id will be set based on the `:id` in the route
-	Exercise.findById(req.params.id)
-		.then(handle404)
-		// if `findById` is succesful, respond with 200 and "exercise" JSON
-		.then((exercise) => res.status(200).json({ exercise: exercise.toObject() }))
-		// if an error occurs, pass it to the handler
-		.catch(next)
+    // req.params.id will be set based on the `:id` in the route
+    Exercise.findById(req.params.id)
+        .populate('owner')
+        .then(handle404)
+        // if `findById` is succesful, respond with 200 and "exercise" JSON
+        .then((exercise) => res.status(200).json({ exercise: exercise.toObject() }))
+        // if an error occurs, pass it to the handler
+        .catch(next)
 })
+
 
 // CREATE
 // POST /exercises
